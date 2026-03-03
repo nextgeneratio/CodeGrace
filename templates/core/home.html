@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Home - CodeGrace{% endblock %}
+{% block content %}
+<div class="card" style="text-align:center; padding: 3rem 1.5rem;">
+    <h1 style="font-size:2.5rem; color:#1a1a2e;">Welcome to <span style="color:#e94560;">CodeGrace</span></h1>
+    <p style="margin:1rem 0 2rem; font-size:1.1rem; color:#555;">A collaborative web application built by a team of 4 for the Hackathon Competition.</p>
+    <a href="{% url 'project_list' %}" class="btn btn-primary" style="margin-right:1rem;">View Projects</a>
+    <a href="{% url 'team' %}" class="btn btn-secondary">Meet the Team</a>
+</div>
+
+<h2 style="margin-bottom:1rem;">Active Projects</h2>
+{% if projects %}
+<div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:1.5rem;">
+    {% for project in projects %}
+    <div class="card">
+        <h3 style="color:#1a1a2e;">{{ project.title }}</h3>
+        <p style="color:#666; margin:0.5rem 0 1rem;">{{ project.description|truncatewords:20 }}</p>
+        <a href="{% url 'project_detail' project.pk %}" class="btn btn-primary">View Details</a>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card"><p style="color:#888;">No active projects yet.</p></div>
+{% endif %}
+
+<h2 style="margin:2rem 0 1rem;">Our Team</h2>
+{% if members %}
+<div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:1.5rem;">
+    {% for member in members %}
+    <div class="card" style="text-align:center;">
+        <div style="width:60px;height:60px;border-radius:50%;background:#e94560;margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.5rem;font-weight:bold;">
+            {{ member.user.username|first|upper }}
+        </div>
+        <h4>{{ member.user.get_full_name|default:member.user.username }}</h4>
+        <p style="color:#e94560; font-size:0.9rem;">{{ member.role|default:"Team Member" }}</p>
+        {% if member.bio %}<p style="color:#666; font-size:0.85rem; margin-top:0.5rem;">{{ member.bio|truncatewords:15 }}</p>{% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card"><p style="color:#888;">No team members yet. <a href="{% url 'register' %}">Register</a> to join!</p></div>
+{% endif %}
+{% endblock %}

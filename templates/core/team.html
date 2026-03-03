@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Team - CodeGrace{% endblock %}
+{% block content %}
+<h2 style="margin-bottom:1.5rem;">Our Team</h2>
+{% if members %}
+<div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap:1.5rem;">
+    {% for member in members %}
+    <div class="card" style="text-align:center;">
+        <div style="width:80px;height:80px;border-radius:50%;background:#1a1a2e;margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;color:#e94560;font-size:2rem;font-weight:bold;">
+            {{ member.user.username|first|upper }}
+        </div>
+        <h3>{{ member.user.get_full_name|default:member.user.username }}</h3>
+        <p style="color:#e94560; margin:0.3rem 0;">{{ member.role|default:"Team Member" }}</p>
+        {% if member.bio %}<p style="color:#666; font-size:0.9rem; margin-top:0.75rem;">{{ member.bio }}</p>{% endif %}
+        <p style="color:#aaa; font-size:0.8rem; margin-top:0.75rem;">Joined: {{ member.joined_at|date:"N Y" }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card">
+    <p style="color:#888;">No team members yet. <a href="{% url 'register' %}" style="color:#e94560;">Register</a> to join the team!</p>
+</div>
+{% endif %}
+{% endblock %}

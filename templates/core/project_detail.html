@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}{{ project.title }} - CodeGrace{% endblock %}
+{% block content %}
+<div class="card">
+    <h2 style="color:#1a1a2e;">{{ project.title }}</h2>
+    <p style="color:#555; margin:1rem 0;">{{ project.description }}</p>
+    <p style="font-size:0.85rem; color:#888;">Created: {{ project.created_at|date:"N j, Y" }}</p>
+    {% if project.members.all %}
+    <p style="margin-top:0.75rem; font-size:0.9rem;"><strong>Members:</strong>
+        {% for member in project.members.all %}{{ member.username }}{% if not forloop.last %}, {% endif %}{% endfor %}
+    </p>
+    {% endif %}
+</div>
+
+<h3 style="margin-bottom:1rem;">Tasks</h3>
+{% if tasks %}
+<div style="display:grid; gap:1rem;">
+    {% for task in tasks %}
+    <div class="card" style="border-left: 4px solid {% if task.status == 'done' %}#28a745{% elif task.status == 'in_progress' %}#ffc107{% else %}#6c757d{% endif %};">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h4>{{ task.title }}</h4>
+            <span style="font-size:0.8rem; padding:0.25rem 0.6rem; border-radius:12px; background:{% if task.status == 'done' %}#d4edda; color:#155724{% elif task.status == 'in_progress' %}#fff3cd; color:#856404{% else %}#e2e3e5; color:#383d41{% endif %};">
+                {{ task.get_status_display }}
+            </span>
+        </div>
+        {% if task.description %}<p style="color:#666; margin:0.5rem 0;">{{ task.description }}</p>{% endif %}
+        {% if task.assigned_to %}<p style="font-size:0.85rem; color:#888;">Assigned to: {{ task.assigned_to.username }}</p>{% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card"><p style="color:#888;">No tasks for this project yet.</p></div>
+{% endif %}
+
+<div style="margin-top:1.5rem;">
+    <a href="{% url 'project_list' %}" class="btn btn-secondary">&larr; Back to Projects</a>
+</div>
+{% endblock %}
